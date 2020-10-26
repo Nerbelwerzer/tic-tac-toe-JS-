@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://kit.fontawesome.com/32e5e73d4b.js" crossorigin="anonymous"></script>
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <title>Test</title>
+</head>
+
+<body>
+  <main>
+
+    <div>
+      <form id="player-form" onsubmit="return false">
+        <label for="player1Name">
+          <p>Player 1 name:</p>
+        </label>
+        <input type="text" id="player1Name" name="player1Name">
+        <label for="player2Name">
+          <p>Player 2 name:</p>
+        </label>
+        <input type="text" id="player2Name" name="player2Name">
+        <button id="start-game" type="submit" value="submit" onclick="board.getPlayers()">Game on!</button>
+      </form>
+    </div>
+
+    <div class="board">
+      <div id="square-1" class="square"></div>
+      <div id="square-2" class="square"></div>
+      <div id="square-3" class="square"></div>
+      <div id="square-4" class="square"></div>
+      <div id="square-5" class="square"></div>
+      <div id="square-6" class="square"></div>
+      <div id="square-7" class="square"></div>
+      <div id="square-8" class="square"></div>
+      <div id="square-9" class="square"></div>
+    </div>
+
+  </main>
+</body>
+
+<script src="script/script.js"></script>
+
+</html>
