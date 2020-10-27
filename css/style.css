@@ -38,13 +38,15 @@ button {
 }
 
 #winner-text {
-    display: none;
+    display: absolute;
     font-size: 4rem;
     position: absolute;
-    top: 250px;
-    left: 18%;
+    top: 0px;
+    left: -400px;
     transform: rotate(-20deg);
 }
+
+
 
 .form {
     margin: 0 auto;
@@ -53,6 +55,7 @@ button {
 .board {
     display: none;
     grid-template-columns: 1fr 1fr 1fr;
+    position: relative;
     justify-content: center;
     width: 450px;
     height: 450px;
@@ -103,4 +106,17 @@ button {
 #square-9 {
     border-top: 3px solid #000;
     border-left: 3px solid #000;
+}
+
+@media screen and (max-width: 1200px) {
+    #winner-text {
+        left: 0px;
+        top: 400px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    h1 {
+        font-size: 3rem;
+    }
 }
