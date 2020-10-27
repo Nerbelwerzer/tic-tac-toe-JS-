@@ -120,3 +120,24 @@ button {
         font-size: 3rem;
     }
 }
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+    .board {
+        width: 300px;
+        height: 300px;
+        margin-top: 15px;
+    }
+    .square {
+        width: 100px;
+        height: 100px;
+        font-size: 5rem;
+    }
+
+    #winner-text {
+        font-size: 3rem;
+        top: 300px;
+    }
+}
