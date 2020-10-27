@@ -13,14 +13,25 @@
 
     <div>
       <form id="player-form" onsubmit="return false">
-        <label for="player1Name">
+        <label for="playerName">
           <p>Player 1 name:</p>
         </label>
-        <input type="text" id="player1Name" name="player1Name">
-        <label for="player2Name">
-          <p>Player 2 name:</p>
-        </label>
-        <input type="text" id="player2Name" name="player2Name">
+        <input type="text" id="playerName" name="playerName">
+
+        <p>Select difficulty:</p>
+
+
+        <div>
+          <input type="radio" id="easy" name="difficulty" value="easy" checked>
+          <label for="easy">Easy</label>
+
+          <input type="radio" id="medium" name="difficulty" value="medium">
+          <label for="medium">Medium</label>
+
+          <input type="radio" id="hard" name="difficulty" value="hard">
+          <label for="hard">Hard</label>
+        </div>
+
         <button id="start-game" type="submit" value="submit" onclick="board.getPlayers()">Game on!</button>
       </form>
     </div>
