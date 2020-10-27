@@ -2,52 +2,53 @@
     box-sizing: border-box;
 }
 
+body {
+    background: url("https://i.pinimg.com/originals/2c/4a/6f/2c4a6f601f1bfd5bd58b51b16a2f4248.jpg");
+    background-size: cover;                    
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
 main {
+    margin: 0 auto;
+    text-align: center;
+    font-family: 'Permanent Marker';
+    font-size: 1.2rem;
+}
+
+h1 {
+    font-family: 'Permanent Marker';
+    font-size: 4rem;
+    margin:8px 0;
+    color: #313131
+}
+
+p {
+    margin: 0;
+}
+
+button {
+    font: inherit;
+    padding: 12px;
+    margin-top: 10px;
+    border: 2px solid #000;
+    border-radius: 50px;
+    color: #fff;
+    background-color: rgb(100, 126, 211);
+}
+
+.form {
     margin: 0 auto;
 }
 
 .board {
-    display: grid;
+    display: none;
     grid-template-columns: 1fr 1fr 1fr;
-    width: 600px;
-    height: 600px;
-    margin: 0 auto;
-}
-
-#square-1 {
-    border-bottom: 1px solid #000;
-    border-right: 1px solid #000;
-}
-
-#square-2 {
-    border-bottom: 1px solid #000;
-}
-
-#square-3 {
-    border-bottom: 1px solid #000;
-    border-left: 1px solid #000;
-}
-
-#square-4 {
-    border-right: 1px solid #000;
-}
-
-#square-6 {
-    border-left: 1px solid #000;
-}
-
-#square-7 {
-    border-top: 1px solid #000;
-    border-right: 1px solid #000;
-}
-
-#square-8 {
-    border-top: 1px solid #000;
-}
-
-#square-9 {
-    border-top: 1px solid #000;
-    border-left: 1px solid #000;
+    justify-content: center;
+    width: 450px;
+    height: 450px;
+    margin: 40px auto;
 }
 
 .square {
@@ -55,7 +56,43 @@ main {
     justify-content: center;
     align-items: center;
     font-size: 7em;
-    height: 200px;
-    width: 200px;
+    height: 150px;
+    width: 150px;
     cursor: pointer;
+}
+
+#square-1 {
+    border-bottom: 3px solid #000;
+    border-right: 3px solid #000;
+}
+
+#square-2 {
+    border-bottom: 3px solid #000;
+}
+
+#square-3 {
+    border-bottom: 3px solid #000;
+    border-left: 3px solid #000;
+}
+
+#square-4 {
+    border-right: 3px solid #000;
+}
+
+#square-6 {
+    border-left: 3px solid #000;
+}
+
+#square-7 {
+    border-top: 3px solid #000;
+    border-right: 3px solid #000;
+}
+
+#square-8 {
+    border-top: 3px solid #000;
+}
+
+#square-9 {
+    border-top: 3px solid #000;
+    border-left: 3px solid #000;
 }

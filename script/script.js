@@ -1,30 +1,31 @@
+//This code is a bit of a mess, I'm afraid. 
+
 const playerFactory = (name, token) => {
   return { name, token };
 };
 
 const easyAI = (token) => {
-  let name = 'Computer'
+  let name = 'Computer';
 
   function move() {
-    let square = Math.floor(Math.random() * 9)
+    let squareIndex = Math.floor(Math.random() * 9)
 
-    if (board.boardArray[square] == "") {
-      board.boardArray[square] = token;
-      board.squares[square].textContent = token;
-      game.displayWinner(token)
-      game.switchPlayer()
+    if (doc.boardArray[squareIndex] == "") {
+      doc.printToken(token, doc.squares[squareIndex]);
+      game.displayWinner(token);
+      game.switchPlayer();
     }
-    else { move() }
+    else { move() };
   }
 
   return { name, token, move }
 };
 
 const mediumAI = (token) => {
-  let name = 'Computer'
+  let name = 'Computer';
 
   function move() {
-    let choice = Math.random()
+    let choice = Math.random();
     choice > 0.5 ? hardAI(token).move() : easyAI(token).move();
   }
 
@@ -32,17 +33,17 @@ const mediumAI = (token) => {
 }
 
 const hardAI = (token) => {
-  let name = 'Computer'
+  let name = 'Computer';
 
   function move() {
     let bestScore = -Infinity;
     let bestMove;
 
-    for (let i = 0; i < board.boardArray.length; i++) {
-      if (board.boardArray[i] === "") {
-        board.boardArray[i] = token;
-        let score = game.minimax(board.boardArray, false, token);
-        board.boardArray[i] = ""
+    for (let i = 0; i < doc.boardArray.length; i++) {
+      if (doc.boardArray[i] === "") {
+        doc.boardArray[i] = token;
+        let score = game.minimax(doc.boardArray, false, token);
+        doc.boardArray[i] = ""
         if (score > bestScore) {
           bestScore = score;
           bestMove = i;
@@ -50,13 +51,12 @@ const hardAI = (token) => {
       }
     }
 
-    board.squares[bestMove].textContent = token;
-    board.boardArray[bestMove] = token
-    game.displayWinner(token)
-    game.switchPlayer()
+    doc.printToken(token, doc.squares[bestMove]);
+    game.displayWinner(token);
+    game.switchPlayer();
   }
 
-  return { name, token, move, }
+  return { name, token, move, };
 };
 
 
@@ -71,10 +71,10 @@ const game = (function () {
     X: -10,
     O: 10,
     draw: 0
-  }
+  };
 
   function initialize(name, difficulty) {
-    board.boardArray = ['', '', '', '', '', '', '', '', '']
+    doc.boardArray = ['', '', '', '', '', '', '', '', ''];
     player = name;
     ai = difficulty;
     currentPlayer = player;
@@ -84,12 +84,11 @@ const game = (function () {
     currentPlayer = currentPlayer == player ? ai : player;
   }
 
-  function printToken(square) {
+  function playerTurn(square) {
     if (square.textContent === '') {
-      square.textContent = player.token;
-      board.boardArray[square.data] = player.token;
-      displayWinner(player.token)
-      switchPlayer()
+      doc.printToken(player.token, square);
+      displayWinner(player.token);
+      switchPlayer();
       ai.move();
     }
     else { alert('Square already taken!') }
@@ -100,33 +99,10 @@ const game = (function () {
     else if (checkVictory(token) != null) { alert(currentPlayer.name + ' wins') }
   }
 
-  function checkVictory(token) {
-    let winner = null;
-
-    winConditions.forEach((condition) => {
-      let count = 0;
-      for (let i = 0; i < condition.length; i++) {
-        if (board.boardArray[condition[i]] == token) { count++ }
-
-        if (count === 3) {
-          winner = token;
-        }
-      }
-    });
-
-    if (winner === null && !board.boardArray.includes("")) {
-      return 'draw'
-    }
-
-    return winner;
-  }
-
-
-
   function minimax(board, isMaximising, token) {
     let result = checkVictory(token);
     if (result !== null) {
-      return minimaxValues[result]
+      return minimaxValues[result];
     }
 
     if (isMaximising) {
@@ -155,38 +131,61 @@ const game = (function () {
     }
   }
 
+
+  function checkVictory(token) {
+    let winner = null;
+
+    winConditions.forEach((condition) => {
+      let count = 0;
+      for (let i = 0; i < condition.length; i++) {
+        if (doc.boardArray[condition[i]] == token) { count++ }
+
+        if (count === 3) {
+          winner = token;
+        }
+      }
+    });
+
+    if (winner === null && !doc.boardArray.includes("")) {
+      return 'draw';
+    }
+
+    return winner;
+  }
+
+
   return {
     initialize,
-    printToken,
     minimax,
     displayWinner,
     switchPlayer,
+    playerTurn
   }
 
 })();
 
-const board = (function () {
+const doc = (function () {
   'use strict'
   let boardArray;
-  const squares = document.querySelectorAll('.square')
+  const gameBoard = document.getElementById('board')
   const form = document.getElementById('player-form')
+  const squares = document.querySelectorAll('.square')
 
   for (let i = 0; i < squares.length; i++) {
     squares[i].data = i;
 
     squares[i].addEventListener('click', () => {
-      game.printToken(squares[i]);
+      game.playerTurn(squares[i]);
     });
   }
 
-  function getPlayers() {
-
-    
+  function setup() {
+    gameBoard.style.display = 'grid';
     squares.forEach((square) => {
       square.textContent = ''
-    })
+    });
 
-    let player = playerFactory(form.playerName.value, 'X')
+    let player = playerFactory('Paul', 'X');
     let ai;
 
     switch(form.difficulty.value) {
@@ -199,16 +198,21 @@ const board = (function () {
       case 'hard':
         ai = hardAI('O');        
     }
-    console.log(ai)
-    game.initialize(player, ai)
+    game.initialize(player, ai);
 
+  }
+
+  function printToken(token, square) {
+    square.style.color = token == 'X' ? '#e61d1d' : '#313131'
+    square.textContent = token;
+    doc.boardArray[square.data] = token;
   }
 
   return {
     squares: squares,
     boardArray: boardArray,
-    form: form,
-    getPlayers
+    setup,
+    printToken
   }
 })();
 
