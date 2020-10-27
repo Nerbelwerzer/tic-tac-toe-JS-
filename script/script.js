@@ -10,9 +10,9 @@ const easyAI = (token) => {
 
     if (board.boardArray[square] == "") {
       board.boardArray[square] = token;
-      game.switchPlayer()
-      game.displayWinner(token)
       board.squares[square].textContent = token;
+      game.displayWinner(token)
+      game.switchPlayer()
     }
     else { move() }
   }
@@ -52,8 +52,8 @@ const hardAI = (token) => {
 
     board.squares[bestMove].textContent = token;
     board.boardArray[bestMove] = token
-    game.switchPlayer()
     game.displayWinner(token)
+    game.switchPlayer()
   }
 
   return { name, token, move, }
@@ -74,6 +74,7 @@ const game = (function () {
   }
 
   function initialize(name, difficulty) {
+    board.boardArray = ['', '', '', '', '', '', '', '', '']
     player = name;
     ai = difficulty;
     currentPlayer = player;
@@ -133,7 +134,7 @@ const game = (function () {
       for (let i = 0; i < board.length; i++) {
         if (board[i] === "") {
           board[i] = ai.token;
-          let score = minimax(board, false, player.token);
+          let score = minimax(board, false, ai.token);
           board[i] = "";
           bestScore = Math.max(score, bestScore);
         }
@@ -145,7 +146,7 @@ const game = (function () {
       for (let i = 0; i < board.length; i++) {
         if (board[i] === "") {
           board[i] = player.token;
-          let score = minimax(board, true, ai.token);
+          let score = minimax(board, true, player.token);
           board[i] = "";
           bestScore = Math.min(score, bestScore);
         }
@@ -166,7 +167,7 @@ const game = (function () {
 
 const board = (function () {
   'use strict'
-  let boardArray = ['', '', '', '', '', '', '', '', '']
+  let boardArray;
   const squares = document.querySelectorAll('.square')
   const form = document.getElementById('player-form')
 
