@@ -8,20 +8,19 @@ body {
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
+    font-family: 'Permanent Marker';
 }
 
 main {
     margin: 0 auto;
     text-align: center;
-    font-family: 'Permanent Marker';
     font-size: 1.2rem;
 }
 
 h1 {
-    font-family: 'Permanent Marker';
     font-size: 4rem;
     margin:8px 0;
-    color: #313131
+    color: rgb(73, 73, 73)
 }
 
 p {
@@ -36,6 +35,15 @@ button {
     border-radius: 50px;
     color: #fff;
     background-color: rgb(100, 126, 211);
+}
+
+#winner-text {
+    display: none;
+    font-size: 4rem;
+    position: absolute;
+    top: 250px;
+    left: 18%;
+    transform: rotate(-20deg);
 }
 
 .form {

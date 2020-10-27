@@ -1,11 +1,11 @@
 //This code is a bit of a mess, I'm afraid. 
 
-const playerFactory = (name, token) => {
-  return { name, token };
+const playerFactory = (token) => {
+  return { token };
 };
 
 const easyAI = (token) => {
-  let name = 'Computer';
+  
 
   function move() {
     let squareIndex = Math.floor(Math.random() * 9)
@@ -22,7 +22,7 @@ const easyAI = (token) => {
 };
 
 const mediumAI = (token) => {
-  let name = 'Computer';
+  
 
   function move() {
     let choice = Math.random();
@@ -33,7 +33,7 @@ const mediumAI = (token) => {
 }
 
 const hardAI = (token) => {
-  let name = 'Computer';
+  
 
   function move() {
     let bestScore = -Infinity;
@@ -56,14 +56,14 @@ const hardAI = (token) => {
     game.switchPlayer();
   }
 
-  return { name, token, move, };
+  return { token, move, };
 };
 
 
 const game = (function () {
   'use strict';
-
-  let player = playerFactory('Paul', 'X')
+  let gameOver;
+  let player = playerFactory('X')
   let ai;
   let currentPlayer;
   let winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -73,11 +73,12 @@ const game = (function () {
     draw: 0
   };
 
-  function initialize(name, difficulty) {
+  function initialize(token, difficulty) {
     doc.boardArray = ['', '', '', '', '', '', '', '', ''];
-    player = name;
+    player = token;
     ai = difficulty;
     currentPlayer = player;
+    gameOver = false;
   }
 
   function switchPlayer() {
@@ -89,14 +90,24 @@ const game = (function () {
       doc.printToken(player.token, square);
       displayWinner(player.token);
       switchPlayer();
-      ai.move();
+      if (gameOver == false) { ai.move(); }
     }
     else { alert('Square already taken!') }
   }
 
   function displayWinner(token) {
-    if (checkVictory(token) === 'draw') { alert("It's a draw!") }
-    else if (checkVictory(token) != null) { alert(currentPlayer.name + ' wins') }
+    if (checkVictory(token) === 'draw') { 
+      gameOver = true; 
+      doc.displayWinner('Draw!') 
+    }
+    else if (checkVictory(token) == 'X') { 
+      gameOver = true; 
+      doc.displayWinner('You win!') 
+    }
+    else if (checkVictory(token) === 'O') { 
+      gameOver = true; 
+      doc.displayWinner('Computer wins!') 
+    }
   }
 
   function minimax(board, isMaximising, token) {
@@ -167,6 +178,7 @@ const game = (function () {
 const doc = (function () {
   'use strict'
   let boardArray;
+  const winnerText = document.getElementById('winner-text')
   const gameBoard = document.getElementById('board')
   const form = document.getElementById('player-form')
   const squares = document.querySelectorAll('.square')
@@ -181,11 +193,12 @@ const doc = (function () {
 
   function setup() {
     gameBoard.style.display = 'grid';
+    winnerText.style.display = 'none';
     squares.forEach((square) => {
       square.textContent = ''
     });
 
-    let player = playerFactory('Paul', 'X');
+    let player = playerFactory('X');
     let ai;
 
     switch(form.difficulty.value) {
@@ -208,11 +221,17 @@ const doc = (function () {
     doc.boardArray[square.data] = token;
   }
 
+  function displayWinner(text) {
+    winnerText.textContent = text;
+    winnerText.style.display = 'block';
+  }
+
   return {
     squares: squares,
     boardArray: boardArray,
     setup,
-    printToken
+    printToken,
+    displayWinner
   }
 })();
 
