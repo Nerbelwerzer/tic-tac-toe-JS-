@@ -1,40 +1,30 @@
-//This code is a bit of a mess, I'm afraid. 
-
 const playerFactory = (token) => {
   return { token };
 };
 
-const easyAI = (token) => {
-  
-
+const easyAI = (token) => { 
   function move() {
     let squareIndex = Math.floor(Math.random() * 9)
 
     if (doc.boardArray[squareIndex] == "") {
       doc.printToken(token, doc.squares[squareIndex]);
-      game.displayWinner(token);
-      game.switchPlayer();
+      
     }
     else { move() };
+    return token;
   }
-
   return { name, token, move }
 };
 
-const mediumAI = (token) => {
-  
-
+const mediumAI = (token) => { 
   function move() {
     let choice = Math.random();
     choice > 0.5 ? hardAI(token).move() : easyAI(token).move();
   }
-
   return { name, token, move }
 }
 
-const hardAI = (token) => {
-  
-
+const hardAI = (token) => { 
   function move() {
     let bestScore = -Infinity;
     let bestMove;
@@ -50,12 +40,9 @@ const hardAI = (token) => {
         }
       }
     }
-
     doc.printToken(token, doc.squares[bestMove]);
-    game.displayWinner(token);
-    game.switchPlayer();
+    return token;
   }
-
   return { token, move, };
 };
 
@@ -63,7 +50,7 @@ const hardAI = (token) => {
 const game = (function () {
   'use strict';
   let gameOver;
-  let player = playerFactory('X')
+  let player;
   let ai;
   let currentPlayer;
   let winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
@@ -88,26 +75,49 @@ const game = (function () {
   function playerTurn(square) {
     if (square.textContent === '') {
       doc.printToken(player.token, square);
-      displayWinner(player.token);
+      findWinner(player.token);
       switchPlayer();
-      if (gameOver == false) { ai.move(); }
+      if (gameOver == false) { aiTurn(); }
     }
     else { alert('Square already taken!') }
   }
 
-  function displayWinner(token) {
+  function aiTurn() {
+    let token = ai.move();
+    findWinner(token);
+    switchPlayer();
+  }
+
+  function findWinner(token) {
     if (checkVictory(token) === 'draw') { 
       gameOver = true; 
       doc.displayWinner('Draw!') 
     }
-    else if (checkVictory(token) == 'X') { 
+    else if (checkVictory(token) === player.token) { 
       gameOver = true; 
       doc.displayWinner('You win!') 
     }
-    else if (checkVictory(token) === 'O') { 
+    else if (checkVictory(token) === ai.token) { 
       gameOver = true; 
       doc.displayWinner('Computer wins!') 
     }
+  }
+
+  function checkVictory(token) {
+    let winner = null;
+
+    winConditions.forEach((condition) => {
+      let count = 0;
+      for (let i = 0; i < condition.length; i++) {
+        if (doc.boardArray[condition[i]] == token) { count++ }
+
+        if (count === 3) { winner = token }
+      }
+    });
+    if (winner === null && !doc.boardArray.includes("")) {
+      return 'draw';
+    }
+    return winner;
   }
 
   function minimax(board, isMaximising, token) {
@@ -142,34 +152,9 @@ const game = (function () {
     }
   }
 
-
-  function checkVictory(token) {
-    let winner = null;
-
-    winConditions.forEach((condition) => {
-      let count = 0;
-      for (let i = 0; i < condition.length; i++) {
-        if (doc.boardArray[condition[i]] == token) { count++ }
-
-        if (count === 3) {
-          winner = token;
-        }
-      }
-    });
-
-    if (winner === null && !doc.boardArray.includes("")) {
-      return 'draw';
-    }
-
-    return winner;
-  }
-
-
   return {
     initialize,
     minimax,
-    displayWinner,
-    switchPlayer,
     playerTurn
   }
 
