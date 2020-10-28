@@ -3,44 +3,44 @@ const playerFactory = (token) => {
 };
 
 const easyAI = (token) => { 
-  function move() {
+  function move(board) {
     let squareIndex = Math.floor(Math.random() * 9)
 
-    if (doc.boardArray[squareIndex] == "") {
-      doc.printToken(token, doc.squares[squareIndex]);
+    if (board[squareIndex] == "") {
+      doc.printToken(token, doc.squares[squareIndex], board);
       
     }
-    else { move() };
+    else { move(board) };
     return token;
   }
   return { name, token, move }
 };
 
 const mediumAI = (token) => { 
-  function move() {
+  function move(board) {
     let choice = Math.random();
-    choice > 0.5 ? hardAI(token).move() : easyAI(token).move();
+    choice > 0.5 ? hardAI(token).move(board) : easyAI(token).move(board);
   }
   return { name, token, move }
 }
 
 const hardAI = (token) => { 
-  function move() {
+  function move(board) {
     let bestScore = -Infinity;
     let bestMove;
 
-    for (let i = 0; i < doc.boardArray.length; i++) {
-      if (doc.boardArray[i] === "") {
-        doc.boardArray[i] = token;
-        let score = game.minimax(doc.boardArray, false, token);
-        doc.boardArray[i] = ""
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        board[i] = token;
+        let score = game.minimax(board, false, token);
+        board[i] = ""
         if (score > bestScore) {
           bestScore = score;
           bestMove = i;
         }
       }
     }
-    doc.printToken(token, doc.squares[bestMove]);
+    doc.printToken(token, doc.squares[bestMove], board);
     return token;
   }
   return { token, move, };
@@ -49,10 +49,7 @@ const hardAI = (token) => {
 
 const game = (function () {
   'use strict';
-  let gameOver;
-  let player;
-  let ai;
-  let currentPlayer;
+  let gameOver, player, board, ai, currentPlayer;
   let winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
   let minimaxValues = {
     X: -10,
@@ -60,21 +57,17 @@ const game = (function () {
     draw: 0
   };
 
-  function initialize(token, difficulty) {
-    doc.boardArray = ['', '', '', '', '', '', '', '', ''];
+  function initialize(token, difficulty, array) {
     player = token;
     ai = difficulty;
+    board = array;
     currentPlayer = player;
     gameOver = false;
   }
 
-  function switchPlayer() {
-    currentPlayer = currentPlayer == player ? ai : player;
-  }
-
   function playerTurn(square) {
     if (square.textContent === '') {
-      doc.printToken(player.token, square);
+      doc.printToken(player.token, square, board);
       findWinner(player.token);
       switchPlayer();
       if (gameOver == false) { aiTurn(); }
@@ -83,9 +76,13 @@ const game = (function () {
   }
 
   function aiTurn() {
-    let token = ai.move();
+    let token = ai.move(board);
     findWinner(token);
     switchPlayer();
+  }
+
+  function switchPlayer() {
+    currentPlayer = currentPlayer == player ? ai : player;
   }
 
   function findWinner(token) {
@@ -109,12 +106,12 @@ const game = (function () {
     winConditions.forEach((condition) => {
       let count = 0;
       for (let i = 0; i < condition.length; i++) {
-        if (doc.boardArray[condition[i]] == token) { count++ }
+        if (board[condition[i]] == token) { count++ }
 
         if (count === 3) { winner = token }
       }
     });
-    if (winner === null && !doc.boardArray.includes("")) {
+    if (winner === null && !board.includes("")) {
       return 'draw';
     }
     return winner;
@@ -183,6 +180,7 @@ const doc = (function () {
       square.textContent = ''
     });
 
+    let boardArray = ['', '', '', '', '', '', '', '', ''];
     let player = playerFactory('X');
     let ai;
 
@@ -196,14 +194,14 @@ const doc = (function () {
       case 'hard':
         ai = hardAI('O');        
     }
-    game.initialize(player, ai);
+    game.initialize(player, ai, boardArray);
 
   }
 
-  function printToken(token, square) {
+  function printToken(token, square, board) {
     square.style.color = token == 'X' ? '#e61d1d' : '#313131'
     square.textContent = token;
-    doc.boardArray[square.data] = token;
+    board[square.data] = token;
   }
 
   function displayWinner(text) {
@@ -213,7 +211,6 @@ const doc = (function () {
 
   return {
     squares: squares,
-    boardArray: boardArray,
     setup,
     printToken,
     displayWinner
