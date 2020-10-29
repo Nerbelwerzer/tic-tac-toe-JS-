@@ -6,35 +6,26 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://kit.fontawesome.com/32e5e73d4b.js" crossorigin="anonymous"></script>
   <meta content="width=device-width, initial-scale=1" name="viewport" />
-  <title>Noughts and Crosses</title>
+  <title>Naughts and Crosses</title>
 </head>
 
 <body>
   <main>
-
     <h1>Naughts and Crosses!</h1>
-
     <div>
       <form id="player-form" onsubmit="return false">
-
         <p>Select difficulty:</p>
-
-
         <div>
           <input type="radio" id="easy" name="difficulty" value="easy" checked>
           <label for="easy">Easy</label>
-
           <input type="radio" id="medium" name="difficulty" value="medium">
           <label for="medium">Medium</label>
-
           <input type="radio" id="hard" name="difficulty" value="hard">
           <label for="hard">Hard</label>
         </div>
-
         <button id="start-game" type="submit" value="submit" onclick="doc.setup()">Game on!</button>
       </form>
     </div>
-
     <div id="board" class="board">
       <div id="winner-text"></div>
       <div id="square-1" class="square"></div>
@@ -47,7 +38,6 @@
       <div id="square-8" class="square"></div>
       <div id="square-9" class="square"></div>
     </div>
-
   </main>
 </body>
 
