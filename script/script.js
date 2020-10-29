@@ -1,3 +1,5 @@
+
+
 const game = (function () {
   'use strict';
   let gameOver, player, board, ai;
@@ -174,6 +176,7 @@ const hardAI = (token) => {
     return token;
   }
 
+  //Credit to The Coding Train for the following
   function minimax(board, isMaximising, currentToken) {
     let result = game.checkVictory(currentToken);
     if (result !== null) {
