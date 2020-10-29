@@ -63,12 +63,12 @@ const game = (function () {
     return winner;
   }
 
-  function getPlayer() {
+  function playerToken() {
     return player.token;
   }
 
   return {
-    getPlayer,
+    playerToken,
     checkVictory,
     initialize,
     playerTurn
@@ -94,6 +94,7 @@ const doc = (function () {
   function setup() {
     gameBoard.style.display = 'grid';
     winnerText.style.display = 'none';
+
     squares.forEach((square) => {
       square.textContent = ''
     });
@@ -140,21 +141,17 @@ const playerFactory = (token) => {
 const easyAI = (token) => {
   function move(board) {
     let squareIndex = Math.floor(Math.random() * 9)
-
-    if (board[squareIndex] == "") {
-      doc.printToken(token, squareIndex, board);
-
-    }
-    else { move(board) };
+    board[squareIndex] == "" ? doc.printToken(token, squareIndex, board) : move(board)
     return token;
-  }
+  };
   return { name, token, move }
 };
 
 const mediumAI = (token) => {
   function move(board) {
     let choice = Math.random();
-    choice > 0.6 ? hardAI(token).move(board) : easyAI(token).move(board);
+    choice > 0.4 ? hardAI(token).move(board) : easyAI(token).move(board);
+    return token;
   }
   return { name, token, move }
 }
@@ -199,8 +196,8 @@ const hardAI = (token) => {
       bestScore = Infinity;
       for (let i = 0; i < board.length; i++) {
         if (board[i] === "") {
-          board[i] = game.getPlayer();
-          let score = minimax(board, true, game.getPlayer(), i);
+          board[i] = game.playerToken();
+          let score = minimax(board, true, game.playerToken(), i);
           board[i] = "";
           bestScore = Math.min(score, bestScore);
         }
