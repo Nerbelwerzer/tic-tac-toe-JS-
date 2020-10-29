@@ -1,21 +1,19 @@
 const game = (function () {
   'use strict';
-  let gameOver, player, board, ai, currentPlayer;
+  let gameOver, player, board, ai;
   let winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
 
   function initialize(token, difficulty, array) {
     player = token;
     ai = difficulty;
     board = array;
-    currentPlayer = player;
     gameOver = false;
   }
 
   function playerTurn(square) {
     if (square.textContent === '') {
-      doc.printToken(player.token, square.data, board);
+      docControl.printToken(player.token, square.data, board);
       findWinner(player.token);
-      switchPlayer();
       if (gameOver == false) { aiTurn(); }
     }
     else { alert('Square already taken!') }
@@ -24,25 +22,20 @@ const game = (function () {
   function aiTurn() {
     let token = ai.move(board);
     findWinner(token);
-    switchPlayer();
-  }
-
-  function switchPlayer() {
-    currentPlayer = currentPlayer == player ? ai : player;
   }
 
   function findWinner(token) {
     if (checkVictory(token) === 'draw') {
       gameOver = true;
-      doc.displayWinner('Draw!')
+      docControl.displayWinner('Draw!')
     }
     else if (checkVictory(token) === player.token) {
       gameOver = true;
-      doc.displayWinner('You win!')
+      docControl.displayWinner('You win!')
     }
     else if (checkVictory(token) === ai.token) {
       gameOver = true;
-      doc.displayWinner('Computer wins!')
+      docControl.displayWinner('Computer wins!')
     }
   }
 
@@ -73,10 +66,9 @@ const game = (function () {
     initialize,
     playerTurn
   }
-
 })();
 
-const doc = (function () {
+const docControl = (function () {
   'use strict'
   const winnerText = document.getElementById('winner-text')
   const gameBoard = document.getElementById('board')
@@ -141,7 +133,7 @@ const playerFactory = (token) => {
 const easyAI = (token) => {
   function move(board) {
     let squareIndex = Math.floor(Math.random() * 9)
-    board[squareIndex] == "" ? doc.printToken(token, squareIndex, board) : move(board)
+    board[squareIndex] == "" ? docControl.printToken(token, squareIndex, board) : move(board)
     return token;
   };
   return { name, token, move }
@@ -165,7 +157,7 @@ const hardAI = (token) => {
 
   function move(board) {
     let bestMove = minimax(board, false, token, null)
-    doc.printToken(token, bestMove, board);
+    docControl.printToken(token, bestMove, board);
     return token;
   }
 
