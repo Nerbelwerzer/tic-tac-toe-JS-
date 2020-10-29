@@ -150,34 +150,42 @@ const mediumAI = (token) => {
 
 const hardAI = (token) => {
   let minimaxValues = {
-    X: -1,
-    O: 1,
+    X: -10,
+    O: 10,
     draw: 0
   };
 
   function move(board) {
-    let bestMove = minimax(board, false, token, null)
+    let bestScore = -Infinity;
+    let bestMove;
+
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === "") {
+        board[i] = token;
+        let score = minimax(board, false);
+        board[i] = ""
+        if (score > bestScore) {
+          bestScore = score;
+          bestMove = i;
+        }
+      }
+    }
     docControl.printToken(token, bestMove, board);
     return token;
   }
 
-  function minimax(board, isMaximising, currentToken, index) {
-    let bestScore = -Infinity;
+  function minimax(board, isMaximising, currentToken) {
     let result = game.checkVictory(currentToken);
-
     if (result !== null) {
-      let score = minimaxValues[result];
-      if (score > bestScore) {
-        let bestMove = index;
-        return bestMove
-      }
+      return minimaxValues[result];
     }
 
     if (isMaximising) {
+      let bestScore = -Infinity;
       for (let i = 0; i < board.length; i++) {
         if (board[i] === "") {
           board[i] = token;
-          let score = minimax(board, false, token, i);
+          let score = minimax(board, false, token);
           board[i] = "";
           bestScore = Math.max(score, bestScore);
         }
@@ -185,11 +193,11 @@ const hardAI = (token) => {
       return bestScore;
     }
     else {
-      bestScore = Infinity;
+      let bestScore = Infinity;
       for (let i = 0; i < board.length; i++) {
         if (board[i] === "") {
           board[i] = game.playerToken();
-          let score = minimax(board, true, game.playerToken(), i);
+          let score = minimax(board, true, game.playerToken());
           board[i] = "";
           bestScore = Math.min(score, bestScore);
         }
